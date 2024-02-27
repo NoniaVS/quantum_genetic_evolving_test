@@ -1,0 +1,1 @@
+from .simple_peasant import SimplePeasant
