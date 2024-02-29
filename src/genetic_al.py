@@ -86,7 +86,7 @@ class GeneticAlgorithm():
                 dna = self.__mutator.mutation_del_gate(dna)
                 peasant =self.__peasant(dna_features = par_1.dna_features, dna = dna)
                 self.__population.append(peasant)
-
+        return self.__population[0].dna
         #self.__evolution_fitness = self.__evolution_fitness[:generation, :]
 
 
