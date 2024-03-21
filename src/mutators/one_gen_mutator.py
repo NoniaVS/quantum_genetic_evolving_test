@@ -3,11 +3,9 @@ from copy import deepcopy
 
 class OneGenMutator():
 
-    def __init__(self, mutation_probability, add_probability, del_probability, possible_gates):
-        self.__mutation_probability = mutation_probability
-        self.__add_probability = add_probability
-        self.__del_probability = del_probability
+    def __init__(self, possible_gates):
         self.__possible_gates = deepcopy(possible_gates)
+
 
 
     def mutation_arb_change(self, _dna, num_wires):
@@ -26,39 +24,29 @@ class OneGenMutator():
             Mutated dna list
         '''
 
-        r = np.random.rand()
-
-        # There exists a probability of the mutation not happening
-        if r > self.__mutation_probability:
-            return _dna
-
         # Perform the mutation in the case it is happening
         if len(_dna) == 0:
             return _dna
-        r = np.random.choice(len(_dna))
 
-        # Fix the case where the replaced gate is a CNOT
-        if _dna[r][0] == 'CNOT':
-            modified_tuple = ('CNOT', _dna[r][1][0])
-            _dna[r] = modified_tuple
+        r = np.random.choice(num_wires)
+        new = str(np.random.choice(self.__possible_gates))  # Pick new gate from possible gates
+        dna = _dna[:r] if r != 0 else []
 
-
-        dna = _dna[:r] if r!= 0 else []
-        new = str(np.random.choice(self.__possible_gates))     #Pick new gate from possible gates
-
-        # Fix the case where the new gate is a CNOT by randomly choosing another target wire
         if new == 'CNOT':
-            while True:
-                x = np.random.choice(num_wires)
-                if x != _dna[r][1]:
-                    dna.append((new, [_dna[r][1],x]))
-                    break
+            wire_2 = deepcopy(r)
+            while wire_2 == r:
+                wire_2 = np.random.choice(num_wires, 1)[0]
+            dna.append({'target_qubit': r, 'gate_name': new, 'control_qubit': wire_2})
         else:
-            dna.append((new, _dna[r][1]))
+            dna.append({'target_qubit': r, 'gate_name': new, 'rotation_param': 0})
 
-        dna += _dna[r+1:] if r+1 < len(_dna) else ''
+        dna += _dna[r + 1:] if r + 1 < len(_dna) else ''
+
+
+
 
         return dna
+
 
 
 
@@ -78,22 +66,15 @@ class OneGenMutator():
             Mutated dna list
         '''
 
-        r = np.random.rand()
-
-        # There exists a probability of the mutation not happening
-        if r > self.__add_probability:
-            return _dna
-
         new_gate = str(np.random.choice(self.__possible_gates))
         new_wire = np.random.choice(num_wires)
         if new_gate == 'CNOT':
-            while True:
-                x = np.random.choice(num_wires)
-                if x != new_wire:
-                    _dna.append((new_gate, [new_wire, x]))
-                    break
+            wire_2 = new_wire
+            while wire_2 == new_wire:
+                wire_2 = np.random.choice(num_wires, 1)[0]
+            _dna.append({'target_qubit': new_wire, 'gate_name': new_gate, 'control_qubit': wire_2})
         else:
-            _dna.append((new_gate, new_wire))
+            _dna.append({'target_qubit': new_wire, 'gate_name': new_gate, 'rotation_param': 0})
 
         return _dna
 
@@ -114,11 +95,6 @@ class OneGenMutator():
             Mutated dna list
         '''
 
-        r = np.random.rand()
-
-        # There exists a probability of the mutation not happening
-        if r > self.__del_probability:
-            return _dna
         if len(_dna) == 0:
             return _dna
         # In the case it happens remove a gate, random selection of the gate

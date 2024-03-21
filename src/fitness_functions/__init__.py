@@ -1,1 +1,2 @@
-from .error_function import ErrorFunction
+from .error_function_matrix import ErrorFunctionMatrix
+from .error_function_state import ErrorFunctionState

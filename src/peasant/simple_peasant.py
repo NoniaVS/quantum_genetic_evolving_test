@@ -1,5 +1,8 @@
 import numpy as np
 from copy import deepcopy
+import pennylane as qml
+from src.tools import list_to_gates
+
 
 
 class SimplePeasant():
@@ -12,6 +15,10 @@ class SimplePeasant():
     @property
     def dna(self):
         return deepcopy(self.__dna)
+
+    @dna.setter
+    def dna(self, value):
+        self.__dna = value
 
     @property
     def fitness(self):
@@ -37,15 +44,20 @@ class SimplePeasant():
 
 
         dna_inputs = self.__dna_features['input']
-        dna_inputs.remove('CNOT')
-        random_dna = []
-
-
+        number_gates_init = self.__dna_features['number_gates_init']
         number_wires = self.__dna_features['number_wires']
-        for i in range(number_wires):
+        random_dna = []
+        for i in range(number_gates_init):
             gate = np.random.choice(dna_inputs, 1)[0]
             wire = np.random.choice(number_wires, 1)[0]
-            random_dna.append((gate, wire))
+            if gate == 'CNOT':
+                wire_2 = deepcopy(wire)
+                while wire_2 == wire:
+                    wire_2 = np.random.choice(number_wires, 1)[0]
+                random_dna.append({'target_qubit': wire, 'gate_name': gate, 'control_qubit': wire_2})
+            else:
+
+                random_dna.append({'target_qubit': wire, 'gate_name': gate, 'rotation_param': 0})
 
         return random_dna
 

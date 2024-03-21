@@ -1,6 +1,6 @@
 import numpy as np
 from copy import deepcopy
-class StochasticUnivSampler():
+class RouletteWheel():
 
     def __init__(self):
         pass
@@ -12,6 +12,7 @@ class StochasticUnivSampler():
         '''
         parent_population = []
         fitness = []
+        print('NUM SURVIVORS', num_survivors)
         for individual in population:
             fitness.append(individual.fitness)
 
@@ -29,22 +30,14 @@ class StochasticUnivSampler():
                 init_point += f
             return wheel
 
-        # Here we generate the random position of the first pointer
-        r = np.random.rand()
-
-        # Then create the rest N pointers, separated between them with equal distances
-        space_between_pointers = (1 - r)/(num_survivors+1)
-        point = r
-        pointers = [point]
-        for i in range(num_survivors-1):
-            point = point + space_between_pointers
-            pointers.append(point)
-
-        # Create the wheel and store the chosen peasants in parent_population
         wheel = makeWheel()
-        for i in range(len(pointers)):
+        print(wheel)
+        exit()
+        for i in range(num_survivors):
+            r = np.random.rand()
+
             for j in range(len(wheel)):
-                if wheel[j][0] <= pointers[i] < wheel[j][1]:
+                if wheel[j][0] <= r < wheel[j][1]:
                     parent_population.append(population[wheel[j][2]])
 
         return parent_population

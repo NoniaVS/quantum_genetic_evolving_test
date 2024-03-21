@@ -1,2 +1,3 @@
 from src.selection_operators.stochastic_univ_sampler import StochasticUnivSampler
 from .best_ones import BestOnes
+from .roulette_wheel import RouletteWheel

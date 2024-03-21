@@ -2,7 +2,7 @@ import numpy as np
 import pennylane as qml
 from src.tools import list_to_gates
 
-class ErrorFunction():
+class ErrorFunctionMatrix():
 
     def __init__(self):
         pass

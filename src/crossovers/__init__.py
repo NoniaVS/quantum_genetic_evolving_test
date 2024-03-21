@@ -1,1 +1,2 @@
 from .one_point_crossover import OnePointCrossover
+from .half_point_crossover import HalfPointCrossover

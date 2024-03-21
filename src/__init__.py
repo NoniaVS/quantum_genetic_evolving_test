@@ -1,1 +1,1 @@
-from .tools import list_to_gates
+from .tools import list_to_gates, function_to_minimize
