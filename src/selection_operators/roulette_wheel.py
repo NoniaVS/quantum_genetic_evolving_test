@@ -6,13 +6,11 @@ class RouletteWheel():
         pass
 
     def selection(self, population, num_survivors):
-        '''Function that applies the Stochastic Universal Sampling to select
-        the parents for the next generation
-        [https://www.researchgate.net/publication/228963181_Modelling_of_a_stochastic_universal_sampling_selection_operator_in_genetic_algorithms_using_generalized_nets]
+        '''Function that applies the Roulette Wheel Selection to select
+        the parents for the next generation. The same parent canbe chosen more than once.
         '''
         parent_population = []
         fitness = []
-        print('NUM SURVIVORS', num_survivors)
         for individual in population:
             fitness.append(individual.fitness)
 
@@ -25,17 +23,15 @@ class RouletteWheel():
             total = np.sum(fitness_sum)
             init_point = 0
             for i in range(len(fitness)):
-                f = fitness[i] / total
-                wheel.append((init_point, init_point + f, i))
+                f = fitness_sum[i] / total
+                to_add = (init_point, init_point + f, i)
+                wheel.append(to_add)
                 init_point += f
             return wheel
 
         wheel = makeWheel()
-        print(wheel)
-        exit()
         for i in range(num_survivors):
             r = np.random.rand()
-
             for j in range(len(wheel)):
                 if wheel[j][0] <= r < wheel[j][1]:
                     parent_population.append(population[wheel[j][2]])

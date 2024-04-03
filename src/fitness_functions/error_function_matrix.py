@@ -31,3 +31,4 @@ class ErrorFunctionMatrix():
         _peasant.fitness = 1/(1+error)
 
 
+

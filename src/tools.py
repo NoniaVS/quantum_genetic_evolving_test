@@ -62,6 +62,37 @@ def function_to_minimize(params, _peasant, target_state, num_wires):
 
 
 
+def function_to_minimize_matrix(params, _peasant, target_matrix, num_wires):
+
+    #Colocamos los parámetros
+    dna = _peasant.dna
+    count = 0
+    for gene in dna:
+        if gene['gate_name'] != 'CNOT':
+            gene['rotation_param'] = params[count]
+            count += 1
+    gates = list_to_gates(dna)
+    dev = qml.device("default.qubit", wires=num_wires)
+
+    @qml.qnode(dev)
+    def circuit():
+        for i in range(num_wires):
+            qml.Identity(wires=i)
+        for gate in gates:
+            qml.apply(gate)
+        return qml.state()
+
+    # fig, ax = qml.draw_mpl(circuit)()
+    # fig.show()
+    #drawer = qml.draw(circuit)
+    #print(drawer())
+    circuit_matrix = qml.matrix(circuit)()  # circuit_matrix is a numpy.ndarray
+    error = np.sum(np.abs(circuit_matrix - target_matrix))
+    _peasant.fitness = 1 / (1 + error)
+    return 1 - _peasant.fitness
+
+
+
 
 
 

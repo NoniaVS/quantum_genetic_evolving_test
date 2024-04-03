@@ -46,5 +46,4 @@ class StochasticUnivSampler():
             for j in range(len(wheel)):
                 if wheel[j][0] <= pointers[i] < wheel[j][1]:
                     parent_population.append(population[wheel[j][2]])
-
         return parent_population

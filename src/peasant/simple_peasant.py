@@ -2,7 +2,7 @@ import numpy as np
 from copy import deepcopy
 import pennylane as qml
 from src.tools import list_to_gates
-
+from math import pi
 
 
 class SimplePeasant():
@@ -56,9 +56,23 @@ class SimplePeasant():
                     wire_2 = np.random.choice(number_wires, 1)[0]
                 random_dna.append({'target_qubit': wire, 'gate_name': gate, 'control_qubit': wire_2})
             else:
+                random_phase = np.random.rand() *2*pi
+                random_dna.append({'target_qubit': wire, 'gate_name': gate, 'rotation_param': random_phase})
+        '''
+        gates = list_to_gates(random_dna)
+        dev = qml.device("default.qubit", wires=6)
 
-                random_dna.append({'target_qubit': wire, 'gate_name': gate, 'rotation_param': 0})
+        @qml.qnode(dev)
+        def circuit():
+            for i in range(6):
+                qml.Identity(wires=i)
+            for gate in gates:
+                qml.apply(gate)
+            return qml.state()
 
+        target = circuit()
+        print(target)
+        '''
         return random_dna
 
 

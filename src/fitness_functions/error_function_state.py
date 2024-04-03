@@ -36,9 +36,20 @@ class ErrorFunctionState():
         #print(drawer())
 
         circuit_state = circuit()
-        #print(circuit_state)
-        error = (np.abs(np.dot(np.conj(target_state), circuit_state)))**2
-        #print('THE ERROR IS', error)
-        _peasant.fitness = error
+        print('CIRCUIT STATE', circuit_state)
+
+        print('TARGET',target_state)
+        print('CONJ TARG', np.conj(target_state))
+        print('MULTIPLICACION', np.dot(np.conj(target_state), circuit_state))
+        fidelity = (np.abs(np.dot(np.conj(target_state), circuit_state)))
+        print('THE fidelity IS', fidelity)
+
+        print('WITH PENNTLANE STUFF')
+        state0 = qml.math.dm_from_state_vector(target_state)
+        state1 = qml.math.dm_from_state_vector(circuit_state)
+        error = qml.math.fidelity(state0, state1)
+        print('THE ERROR IS', error)
+        exit()
+        _peasant.fitness = fidelity
 
 
