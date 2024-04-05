@@ -28,17 +28,28 @@ class OneGenMutator():
         if len(_dna) == 0:
             return _dna
 
-        r = np.random.choice(num_wires)
-        new = str(np.random.choice(self.__possible_gates))  # Pick new gate from possible gates
+        r = np.random.choice(len(_dna))
         dna = _dna[:r] if r != 0 else []
 
-        if new == 'CNOT':
-            wire_2 = deepcopy(r)
-            while wire_2 == r:
-                wire_2 = np.random.choice(num_wires, 1)[0]
-            dna.append({'target_qubit': r, 'gate_name': new, 'control_qubit': wire_2})
+        #r = np.random.choice(num_wires)
+        if _dna[r]['gate_name'] == 'CNOT':
+            possible_gates = deepcopy(self.__possible_gates)
+            possible_gates.remove('CNOT')
+            new_1 = str(np.random.choice(possible_gates))  # Pick new gate from possible gates
+            new_2 = str(np.random.choice(possible_gates))  # Pick new gate from possible gates
+            old_wire1 = _dna[r]['target_qubit']
+            old_wire2 = _dna[r]['control_qubit']
+            dna.append({'target_qubit': old_wire1, 'gate_name': new_1, 'rotation_param': 0})
+            dna.append({'target_qubit': old_wire2, 'gate_name': new_2, 'rotation_param': 0})
         else:
-            dna.append({'target_qubit': r, 'gate_name': new, 'rotation_param': 0})
+            new = str(np.random.choice(self.__possible_gates))
+            if new == 'CNOT':
+                wire_2 = deepcopy(_dna[r]['target_qubit'])
+                while wire_2 == _dna[r]['target_qubit']:
+                    wire_2 = np.random.choice(num_wires, 1)[0]
+                dna.append({'target_qubit': _dna[r]['target_qubit'], 'gate_name': new, 'control_qubit': wire_2})
+            else:
+                dna.append({'target_qubit': _dna[r]['target_qubit'], 'gate_name': new, 'rotation_param': 0})
 
         dna += _dna[r + 1:] if r + 1 < len(_dna) else ''
 

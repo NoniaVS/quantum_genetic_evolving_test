@@ -136,7 +136,7 @@ class GeneticAlgorithm():
                 if len(init_params) == 0:
                     continue
                 else:
-                    res = scipy.optimize.minimize(fun = function_to_minimize_matrix, x0= init_params, args = (self.__population[i], target_matrix, num_wires),
+                    res = scipy.optimize.minimize(fun = function_to_minimize, x0= init_params, args = (self.__population[i], target_matrix, num_wires),
                                               method= 'SLSQP')
 
                 self.__population[i].fitness = 1 - res.fun
@@ -221,6 +221,7 @@ class GeneticAlgorithm():
                 # fig.show()
                 drawer = qml.draw(circuit)
                 print(drawer())
+                print('STATE', circuit())
 
                 print('WITH A FIDELITY OF:', self.__population[0].fitness)
                 break
