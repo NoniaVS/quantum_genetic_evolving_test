@@ -118,6 +118,7 @@ class GeneticAlgorithm():
 
 
             print('OPTIMIZING PARAMETERS')
+
             for i in range(len(self.__population)):
                 init_params = []
                 '''
@@ -132,11 +133,10 @@ class GeneticAlgorithm():
                 for k in range(len(self.__population[i].dna)):
                     if self.__population[i].dna[k]['gate_name'] != 'CNOT':
                         init_params.append(self.__population[i].dna[k]['rotation_param'])
-
                 if len(init_params) == 0:
                     continue
                 else:
-                    res = scipy.optimize.minimize(fun = function_to_minimize, x0= init_params, args = (self.__population[i], target_matrix, num_wires),
+                    res = scipy.optimize.minimize(fun = function_to_minimize_matrix, x0= init_params, args = (self.__population[i], target_matrix, num_wires),
                                               method= 'SLSQP')
 
                 self.__population[i].fitness = 1 - res.fun
@@ -150,6 +150,7 @@ class GeneticAlgorithm():
                         self.__population[i].dna = a
 
                         count += 1
+
 
 
 

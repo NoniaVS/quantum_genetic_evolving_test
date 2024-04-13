@@ -42,6 +42,7 @@ class ErrorFunctionState():
         state1 = qml.math.dm_from_state_vector(circuit_state)
         fidelity = qml.math.fidelity(state0, state1)
 
+
         _peasant.fitness = fidelity
 
 

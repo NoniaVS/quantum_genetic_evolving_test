@@ -26,10 +26,9 @@ class ErrorFunctionMatrix():
             for gate in gates:
                 qml.apply(gate)
 
-        print(qml.draw(circuit)())
+        #print(qml.draw(circuit)())
 
         circuit_matrix = qml.matrix(circuit)()  #circuit_matrix is a numpy.ndarray
-        print('MATRIX', circuit_matrix)
         error = np.sum(np.abs(circuit_matrix - target_matrix))
         _peasant.fitness = 1/(1+error)
         return circuit_matrix
